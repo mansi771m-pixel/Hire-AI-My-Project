@@ -1,0 +1,11 @@
+{
+  "name": "Hire-AI",
+  "description": "Next-generation AI interview agent and recruitment platform for candidate screenings, automated resume parsing, interactive AI interviews, and seamless scheduling.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
