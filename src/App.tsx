@@ -241,7 +241,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070b14] text-slate-100 flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div className="app-shell min-h-screen flex flex-col selection:bg-orange-200 selection:text-[#20241f]">
       {/* Toast Notification */}
       {notification && (
         <div className="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-50 bg-[#0e1626] text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-cyan-500/40 flex items-center space-x-3 text-xs font-semibold animate-slide-up backdrop-blur-xl">
@@ -263,7 +263,7 @@ export default function App() {
       />
 
       {/* Main Content Workspace */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 pb-28 md:pb-10">
+      <main className="app-main flex-1 w-full mx-auto p-4 sm:p-6 lg:p-10 pb-28 md:pb-10">
         {isLoading ? (
           <div className="py-28 flex flex-col items-center justify-center space-y-4">
             <div className="w-10 h-10 border-3 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
@@ -386,7 +386,7 @@ export default function App() {
       )}
 
       {/* High-Tech Futuristic Footer */}
-      <footer className="mt-auto border-t border-white/[0.08] bg-[#090d16] py-5 px-6 pb-24 md:pb-5 text-center text-xs text-slate-400">
+      <footer className="app-footer mt-auto border-t py-5 px-6 pb-24 md:pb-5 text-center text-xs">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center space-x-2">
             <div className="w-5 h-5 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-[10px] border border-cyan-500/30">

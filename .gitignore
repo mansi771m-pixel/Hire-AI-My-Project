@@ -152,3 +152,4 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 >>>>>>> 5c440d543cb1e1f4f3f59e8fc97728ade1927f3d
+.agent
