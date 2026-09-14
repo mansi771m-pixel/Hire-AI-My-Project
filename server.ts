@@ -1139,6 +1139,8 @@ app.post("/api/reset-data", (_req, res) => {
   res.json({ message: "Store refreshed" });
 });
 
+export { app };
+
 // Vite middleware and static serving
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
@@ -1160,4 +1162,12 @@ async function startServer() {
   });
 }
 
-startServer();
+if (process.env.VERCEL) {
+  const distPath = path.join(process.cwd(), "dist");
+  app.use(express.static(distPath));
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(distPath, "index.html"));
+  });
+} else {
+  startServer();
+}
