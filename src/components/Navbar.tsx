@@ -222,7 +222,18 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Mobile Fixed Bottom Navigation Bar - Prevents any overlapping with main screen */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#080d1a]/95 backdrop-blur-2xl border-t border-white/[0.1] px-2 py-2 shadow-2xl flex items-center justify-around">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[#080d1a]/95 backdrop-blur-2xl border-t border-white/[0.1] px-1.5 py-2 shadow-2xl flex items-center justify-around">
+        {setUserRole && (
+          <button
+            id="mobile-role-toggle"
+            aria-label={`Switch to ${userRole === "recruiter" ? "candidate" : "recruiter"} view`}
+            onClick={() => setUserRole(userRole === "recruiter" ? "candidate" : "recruiter")}
+            className="flex flex-col items-center space-y-1 py-1 px-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-colors"
+          >
+            <Sparkles className="w-4 h-4 text-orange-300" />
+            <span className="text-[9px] font-mono">{userRole === "recruiter" ? "Candidate" : "Recruiter"}</span>
+          </button>
+        )}
         <button
           onClick={() => handleTabClick("pipeline")}
           className={`flex flex-col items-center space-y-1 py-1 px-2.5 rounded-lg transition-colors ${

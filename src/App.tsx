@@ -24,6 +24,13 @@ export default function App() {
   const [activeScorecard, setActiveScorecard] = useState<InterviewEvaluation | null>(null);
   const [notification, setNotification] = useState<{ message: string; type: "success" | "info" } | null>(null);
 
+  const handleTabChange = (tab: TabType) => {
+    setCurrentTab(tab);
+    if (userRole === "candidate") {
+      setUserRole("recruiter");
+    }
+  };
+
   // Show banner alert
   const showToast = (message: string, type: "success" | "info" = "success") => {
     setNotification({ message, type });
@@ -254,8 +261,8 @@ export default function App() {
       <Navbar
         currentTab={currentTab}
         activeTab={currentTab}
-        onSelectTab={(tab) => setCurrentTab(tab as TabType)}
-        setActiveTab={setCurrentTab}
+        onSelectTab={(tab) => handleTabChange(tab as TabType)}
+        setActiveTab={handleTabChange}
         userRole={userRole}
         setUserRole={setUserRole}
         candidateCount={candidates.length}
@@ -278,10 +285,14 @@ export default function App() {
             jobs={jobs}
             interviews={interviews}
             onEnterInterview={() => {
-              if (!activeInterviewCandidate && candidates[0]) {
-                setActiveInterviewCandidate(candidates[0]);
+              const candidate = activeInterviewCandidate || candidates[0];
+              if (candidate) {
+                setActiveInterviewCandidate(candidate);
+                setUserRole("recruiter");
+                setCurrentTab("interview");
+              } else {
+                showToast("Add a candidate before starting an AI interview.", "info");
               }
-              setCurrentTab("interview");
             }}
             onOpenResumeParser={() => {
               setUserRole("recruiter");
@@ -320,12 +331,12 @@ export default function App() {
                 onLaunchInterview={(cand) => {
                   handleSaveCandidate(cand);
                   setActiveInterviewCandidate(cand);
-                  setCurrentTab("interview");
+                  handleTabChange("interview");
                 }}
                 onScheduleInterview={(cand) => {
                   handleSaveCandidate(cand);
                   setActiveInterviewCandidate(cand);
-                  setCurrentTab("scheduler");
+                  handleTabChange("scheduler");
                 }}
               />
             )}
