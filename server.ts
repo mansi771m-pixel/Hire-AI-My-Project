@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs/promises";
 import dotenv from "dotenv";
 import { GoogleGenAI, Type } from "@google/genai";
 import { createServer as createViteServer } from "vite";
@@ -8,9 +9,36 @@ import type { Job, Candidate, InterviewSlot, InterviewEvaluation, PlatformStats 
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
+const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_FILE = path.join(DATA_DIR, "hire-ai-store.json");
 
 app.use(express.json({ limit: "15mb" }));
+
+app.use((req, res, next) => {
+  const requestOrigin = req.headers.origin;
+  const allowedOrigins = new Set([
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    process.env.APP_URL,
+  ].filter(Boolean) as string[]);
+
+  if (requestOrigin && (allowedOrigins.has(requestOrigin) || requestOrigin.startsWith("https://"))) {
+    res.setHeader("Access-Control-Allow-Origin", requestOrigin);
+  }
+
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
 
 // Lazy AI Client Helper
 function getGeminiClient(): GoogleGenAI | null {
@@ -26,6 +54,43 @@ function getGeminiClient(): GoogleGenAI | null {
       },
     },
   });
+}
+
+type DataStore = {
+  jobs: Job[];
+  candidates: Candidate[];
+  interviews: InterviewSlot[];
+};
+
+async function persistDataStore() {
+  await fs.mkdir(DATA_DIR, { recursive: true });
+  const payload: DataStore = {
+    jobs: jobsStore,
+    candidates: candidatesStore,
+    interviews: interviewsStore,
+  };
+
+  await fs.writeFile(DATA_FILE, JSON.stringify(payload, null, 2), "utf-8");
+}
+
+async function initializeDataStore() {
+  await fs.mkdir(DATA_DIR, { recursive: true });
+
+  try {
+    const stored = await fs.readFile(DATA_FILE, "utf-8");
+    const parsed = JSON.parse(stored) as Partial<DataStore>;
+
+    if (Array.isArray(parsed.jobs) && Array.isArray(parsed.candidates) && Array.isArray(parsed.interviews)) {
+      jobsStore = parsed.jobs;
+      candidatesStore = parsed.candidates;
+      interviewsStore = parsed.interviews;
+      return;
+    }
+  } catch {
+    // Ignore malformed or missing file and fall back to starter data.
+  }
+
+  await persistDataStore();
 }
 
 // In-Memory Database Store (Simulating MERN MongoDB persistence)
@@ -394,6 +459,10 @@ let interviewsStore: InterviewSlot[] = [
   },
 ];
 
+const defaultJobsStore = JSON.parse(JSON.stringify(jobsStore)) as Job[];
+const defaultCandidatesStore = JSON.parse(JSON.stringify(candidatesStore)) as Candidate[];
+const defaultInterviewsStore = JSON.parse(JSON.stringify(interviewsStore)) as InterviewSlot[];
+
 // Health Check
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
@@ -551,6 +620,7 @@ app.post("/api/candidates", (req, res) => {
   };
 
   candidatesStore.unshift(newCandidate);
+  void persistDataStore();
   res.status(201).json(newCandidate);
 });
 
@@ -565,6 +635,7 @@ app.patch("/api/candidates/:id", (req, res) => {
     ...req.body,
   };
 
+  void persistDataStore();
   res.json(candidatesStore[index]);
 });
 
@@ -574,6 +645,7 @@ app.delete("/api/candidates/:id", (req, res) => {
     return res.status(404).json({ error: "Candidate not found" });
   }
   const deleted = candidatesStore.splice(index, 1);
+  void persistDataStore();
   res.json(deleted[0]);
 });
 
@@ -894,6 +966,7 @@ app.post("/api/ai/evaluate-interview", async (req, res) => {
         candidate.evaluation = fallbackEval;
       }
 
+      void persistDataStore();
       return res.json(fallbackEval);
     }
 
@@ -1004,6 +1077,7 @@ Generate a comprehensive, rigorous hiring scorecard:
       candidate.evaluation = evaluation;
     }
 
+    void persistDataStore();
     res.json(evaluation);
   } catch (error: any) {
     console.error("Error evaluating interview:", error);
@@ -1108,6 +1182,7 @@ app.post("/api/interviews", (req, res) => {
     candidate.interviewId = newInterview.id;
   }
 
+  void persistDataStore();
   res.status(201).json(newInterview);
 });
 
@@ -1122,6 +1197,7 @@ app.patch("/api/interviews/:id", (req, res) => {
     ...req.body,
   };
 
+  void persistDataStore();
   res.json(interviewsStore[index]);
 });
 
@@ -1131,11 +1207,16 @@ app.delete("/api/interviews/:id", (req, res) => {
     return res.status(404).json({ error: "Interview not found" });
   }
   const deleted = interviewsStore.splice(index, 1);
+  void persistDataStore();
   res.json(deleted[0]);
 });
 
 // Data reset endpoint for easy testing
-app.post("/api/reset-data", (_req, res) => {
+app.post("/api/reset-data", async (_req, res) => {
+  jobsStore = JSON.parse(JSON.stringify(defaultJobsStore));
+  candidatesStore = JSON.parse(JSON.stringify(defaultCandidatesStore));
+  interviewsStore = JSON.parse(JSON.stringify(defaultInterviewsStore));
+  await persistDataStore();
   res.json({ message: "Store refreshed" });
 });
 
@@ -1143,6 +1224,8 @@ export { app };
 
 // Vite middleware and static serving
 async function startServer() {
+  await initializeDataStore();
+
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },

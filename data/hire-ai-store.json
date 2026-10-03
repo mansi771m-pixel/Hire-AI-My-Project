@@ -1,0 +1,422 @@
+{
+  "jobs": [
+    {
+      "id": "job-1",
+      "title": "Senior Full-Stack Engineer (MERN & AI)",
+      "department": "Engineering",
+      "location": "San Francisco, CA (Hybrid)",
+      "type": "Full-time",
+      "experienceLevel": "Senior",
+      "salaryRange": "$150,000 - $185,000",
+      "description": "We are seeking an experienced Full-Stack Engineer to lead the architecture and development of our next-generation AI recruitment and workflow platforms. You will design resilient Node/Express backends, modern React UIs, and integrate LLM agents.",
+      "requirements": [
+        "5+ years of production experience with Node.js, Express, and React",
+        "Strong proficiency in TypeScript, RESTful API design, and asynchronous state handling",
+        "Demonstrated experience integrating Large Language Models (Gemini, OpenAI, or LangChain)",
+        "Deep understanding of database schema design (MongoDB, PostgreSQL) and indexing",
+        "Experience deploying containerized applications with Docker and Cloud Run / AWS"
+      ],
+      "preferredSkills": [
+        "TypeScript",
+        "React",
+        "Node.js",
+        "MongoDB",
+        "Tailwind CSS",
+        "Gemini API",
+        "WebSockets"
+      ],
+      "presetQuestions": [
+        "Walk me through the architecture of a high-concurrency real-time application you built using Node.js and React.",
+        "How do you handle API rate limits, streaming responses, and latency when integrating LLMs into web apps?",
+        "Can you explain how you structure data indexing and caching in MongoDB or Redis to optimize query performance?",
+        "Describe a time when you had to debug a difficult race condition or memory leak in a production Node server.",
+        "How do you approach writing clean, testable code while maintaining high delivery velocity in a startup?"
+      ],
+      "status": "Active",
+      "createdAt": "2026-02-15T09:00:00.000Z",
+      "applicantCount": 14
+    },
+    {
+      "id": "job-2",
+      "title": "AI & Machine Learning Prompt Specialist",
+      "department": "AI Research & Solutions",
+      "location": "Remote",
+      "type": "Full-time",
+      "experienceLevel": "Mid-Level",
+      "salaryRange": "$130,000 - $160,000",
+      "description": "Join our Applied AI team to design, evaluate, and benchmark autonomous AI agent screening workflows, synthetic candidate evaluations, and structured knowledge extraction pipelines.",
+      "requirements": [
+        "3+ years in Applied AI, Natural Language Processing, or Prompt Architecture",
+        "Hands-on experience with Python or TypeScript SDKs for Gemini, Anthropic, or OpenAI",
+        "Familiarity with structured output validation (JSON schema, Pydantic, Zod)",
+        "Knowledge of few-shot prompting, chain-of-thought, and agentic tool use"
+      ],
+      "preferredSkills": [
+        "Prompt Engineering",
+        "Python",
+        "TypeScript",
+        "LLM Evaluation",
+        "Retrieval Augmented Generation (RAG)"
+      ],
+      "presetQuestions": [
+        "How do you evaluate and minimize hallucinations when deploying an LLM into an automated scoring pipeline?",
+        "Explain your technique for designing system instructions that strictly adhere to JSON schemas.",
+        "What are the trade-offs between zero-shot, few-shot prompting, and fine-tuning for specialized domain tasks?"
+      ],
+      "status": "Active",
+      "createdAt": "2026-02-20T14:30:00.000Z",
+      "applicantCount": 9
+    },
+    {
+      "id": "job-3",
+      "title": "Product Manager - AI Platform & Developer Tools",
+      "department": "Product",
+      "location": "New York, NY (Hybrid)",
+      "type": "Full-time",
+      "experienceLevel": "Senior",
+      "salaryRange": "$140,000 - $175,000",
+      "description": "Looking for a technical Product Manager to spearhead our AI recruitment automation roadmap. You will bridge candidate experience, recruiter analytics, and cutting-edge GenAI agent workflows.",
+      "requirements": [
+        "4+ years of product management experience in B2B SaaS or TalentTech",
+        "Strong technical intuition for AI/ML capabilities, APIs, and developer workflows",
+        "Proven track record of defining product metrics, driving discovery, and shipping 0-to-1 features"
+      ],
+      "preferredSkills": [
+        "Product Strategy",
+        "User Research",
+        "Agile Roadmap",
+        "Data Analytics",
+        "HRTech / ATS Knowledge"
+      ],
+      "presetQuestions": [
+        "How do you balance AI autonomy with human-in-the-loop oversight in sensitive domains like hiring?",
+        "Tell me about a time you had to pivot a product feature based on user telemetry and behavioral feedback.",
+        "How do you prioritize your roadmap when balancing enterprise customer requests against core platform scalability?"
+      ],
+      "status": "Active",
+      "createdAt": "2026-02-25T11:00:00.000Z",
+      "applicantCount": 6
+    }
+  ],
+  "candidates": [
+    {
+      "id": "cand-1",
+      "name": "Elena Rostova",
+      "email": "elena.rostova@example.com",
+      "phone": "+1 (415) 890-2134",
+      "jobId": "job-1",
+      "jobTitle": "Senior Full-Stack Engineer (MERN & AI)",
+      "status": "Interviewed",
+      "atsScore": 94,
+      "matchSummary": "Exceptional match. Elena brings 6+ years of specialized MERN stack engineering with deep production experience deploying generative AI pipelines on GCP and Node.js microservices.",
+      "strengths": [
+        "6+ years full-stack TypeScript, React 18/19, and Node.js",
+        "Production deployment of Gemini & OpenAI API streaming agents",
+        "Strong MongoDB schema design and sharding background",
+        "Clean architectural approach with 90%+ automated test coverage"
+      ],
+      "missingSkills": [
+        "Kubernetes (listed as familiar, not expert)"
+      ],
+      "parsedResume": {
+        "fullName": "Elena Rostova",
+        "email": "elena.rostova@example.com",
+        "phone": "+1 (415) 890-2134",
+        "location": "San Francisco, CA",
+        "summary": "Senior Full-Stack Software Engineer with 6+ years designing high-throughput web architectures, real-time collaboration engines, and LLM-powered enterprise tooling.",
+        "skills": [
+          "React",
+          "TypeScript",
+          "Node.js",
+          "Express",
+          "MongoDB",
+          "Gemini API",
+          "Tailwind CSS",
+          "Docker",
+          "Redis"
+        ],
+        "experienceYears": 6,
+        "experiences": [
+          {
+            "role": "Senior Full Stack Engineer",
+            "company": "Nexus AI Technologies",
+            "duration": "2023 - Present",
+            "highlights": [
+              "Architected real-time AI assistant backend serving 50,000+ daily active users using Express & WebSockets.",
+              "Decreased average response latency by 45% using streaming token responses and Redis caching.",
+              "Mentored team of 4 junior engineers on clean asynchronous patterns and React performance."
+            ]
+          },
+          {
+            "role": "Full Stack Developer",
+            "company": "CloudVibe Software",
+            "duration": "2020 - 2023",
+            "highlights": [
+              "Built MERN stack client dashboards with granular RBAC and dynamic data reporting.",
+              "Migrated relational schemas to MongoDB Atlas, improving write throughput by 3x."
+            ]
+          }
+        ],
+        "education": [
+          {
+            "degree": "B.S. in Computer Science",
+            "institution": "University of California, Berkeley",
+            "year": "2020"
+          }
+        ],
+        "certifications": [
+          "GCP Professional Cloud Architect",
+          "MongoDB Certified Developer"
+        ]
+      },
+      "appliedAt": "2026-03-01T10:15:00.000Z",
+      "interviewId": "int-1",
+      "evaluation": {
+        "id": "eval-1",
+        "candidateId": "cand-1",
+        "candidateName": "Elena Rostova",
+        "jobId": "job-1",
+        "jobTitle": "Senior Full-Stack Engineer (MERN & AI)",
+        "overallScore": 92,
+        "recommendation": "Strong Hire",
+        "categoryScores": {
+          "technical": 95,
+          "communication": 90,
+          "problemSolving": 92,
+          "culturalFit": 91
+        },
+        "strengths": [
+          "Articulated microservice event loop concepts and memory management with crystal clarity.",
+          "Proactively brought up security considerations regarding client vs server LLM key safety.",
+          "Demonstrated deep empathy for end-user latency and streaming UX."
+        ],
+        "areasForImprovement": [
+          "Could elaborate more on distributed tracing across multi-region clusters."
+        ],
+        "summaryNotes": "Elena demonstrated outstanding technical competence, high architectural maturity, and concise communication. Highly recommended for immediate offer.",
+        "transcript": [
+          {
+            "speaker": "agent",
+            "message": "Hello Elena! I'm Alex, your AI technical screener today. Let's start with your architectural experience: Can you walk me through how you designed your high-concurrency real-time application using Node.js and React at Nexus AI?",
+            "timestamp": "00:01"
+          },
+          {
+            "speaker": "candidate",
+            "message": "At Nexus AI, our system received thousands of concurrent WebSocket connections. We decoupled the ingestion layer from the heavy LLM inference queue using a lightweight Node.js event broker with Redis Pub/Sub, and streamed tokens directly via server-sent events to a customized React hook that batch-rendered updates using requestAnimationFrame.",
+            "timestamp": "00:45",
+            "critique": "Superb architectural explanation. Correctly highlighted decoupling, streaming, and UI batch rendering."
+          },
+          {
+            "speaker": "agent",
+            "message": "That's a very solid approach. How did you handle API rate limits and token exhaustion when communicating with the upstream LLM providers?",
+            "timestamp": "01:10"
+          },
+          {
+            "speaker": "candidate",
+            "message": "We implemented a token-bucket rate limiter combined with an exponential backoff jitter queue in BullMQ. If an upstream provider returned a 429 status code, our fallback router would gracefully downgrade non-critical requests to a lighter flash model while preserving user session continuity.",
+            "timestamp": "01:55",
+            "critique": "Demonstrated strong fault tolerance principles and graceful model fallback design."
+          }
+        ],
+        "evaluatedAt": "2026-03-03T16:20:00.000Z"
+      }
+    },
+    {
+      "id": "cand-2",
+      "name": "Marcus Vance",
+      "email": "marcus.vance@example.com",
+      "phone": "+1 (512) 674-9021",
+      "jobId": "job-1",
+      "jobTitle": "Senior Full-Stack Engineer (MERN & AI)",
+      "status": "Interview Scheduled",
+      "atsScore": 88,
+      "matchSummary": "Solid candidate with 5 years of full-stack JavaScript/TypeScript engineering, REST API architecture, and React application development.",
+      "strengths": [
+        "5 years Node.js and React expertise",
+        "Hands-on experience with MongoDB Atlas & Mongoose",
+        "Skilled in building responsive web applications and dashboards"
+      ],
+      "missingSkills": [
+        "Limited production GenAI agent tooling experience"
+      ],
+      "parsedResume": {
+        "fullName": "Marcus Vance",
+        "email": "marcus.vance@example.com",
+        "phone": "+1 (512) 674-9021",
+        "location": "Austin, TX",
+        "summary": "Full-Stack Developer with 5 years of experience delivering robust web applications using the MERN stack, GraphQL, and modern DevOps tools.",
+        "skills": [
+          "JavaScript",
+          "TypeScript",
+          "React",
+          "Node.js",
+          "Express",
+          "MongoDB",
+          "Docker",
+          "GraphQL"
+        ],
+        "experienceYears": 5,
+        "experiences": [
+          {
+            "role": "Senior Software Engineer",
+            "company": "Austin Digital Labs",
+            "duration": "2022 - Present",
+            "highlights": [
+              "Built customer-facing portal using React, Tailwind CSS, and Express backend.",
+              "Implemented CI/CD pipelines with GitHub Actions, reducing deployment errors by 30%."
+            ]
+          }
+        ],
+        "education": [
+          {
+            "degree": "B.S. in Software Engineering",
+            "institution": "University of Texas at Austin",
+            "year": "2021"
+          }
+        ]
+      },
+      "appliedAt": "2026-03-02T11:45:00.000Z",
+      "interviewId": "int-2"
+    },
+    {
+      "id": "cand-3",
+      "name": "Aaliyah Chen",
+      "email": "aaliyah.chen@example.com",
+      "phone": "+1 (206) 441-7890",
+      "jobId": "job-2",
+      "jobTitle": "AI & Machine Learning Prompt Specialist",
+      "status": "Screened",
+      "atsScore": 91,
+      "matchSummary": "Strong background in LLM prompt optimization, structured JSON extraction, and RAG architectures. Highly suitable for our AI agent engineering pipeline.",
+      "strengths": [
+        "Published benchmarks on few-shot reasoning models",
+        "Expertise in Python, TypeScript, and JSON Schema validation",
+        "Demonstrated experience building automated test suites for LLM outputs"
+      ],
+      "missingSkills": [
+        "Direct recruitment technology domain experience"
+      ],
+      "parsedResume": {
+        "fullName": "Aaliyah Chen",
+        "email": "aaliyah.chen@example.com",
+        "phone": "+1 (206) 441-7890",
+        "location": "Seattle, WA",
+        "summary": "Applied AI Engineer specializing in prompt design, hallucination reduction, and autonomous agents with 4 years in software and data engineering.",
+        "skills": [
+          "Prompt Engineering",
+          "Python",
+          "TypeScript",
+          "Gemini API",
+          "RAG",
+          "LangChain",
+          "Vector Databases"
+        ],
+        "experienceYears": 4,
+        "experiences": [
+          {
+            "role": "AI Workflow Engineer",
+            "company": "Cognitive Synthetics",
+            "duration": "2023 - Present",
+            "highlights": [
+              "Designed automated prompt evaluation system reducing false positives in text classification from 14% to under 2%.",
+              "Built agentic tool-use pipelines for financial report parsing."
+            ]
+          }
+        ],
+        "education": [
+          {
+            "degree": "M.S. in Information Systems & AI",
+            "institution": "University of Washington",
+            "year": "2022"
+          }
+        ]
+      },
+      "appliedAt": "2026-03-04T08:30:00.000Z"
+    },
+    {
+      "id": "cand-4",
+      "name": "David Kim",
+      "email": "david.kim@example.com",
+      "phone": "+1 (646) 332-9011",
+      "jobId": "job-3",
+      "jobTitle": "Product Manager - AI Platform & Developer Tools",
+      "status": "Applied",
+      "atsScore": 78,
+      "matchSummary": "Experienced B2B product manager with 4 years leading SaaS growth initiatives. Possesses general software familiarity, but limited technical depth in machine learning pipelines.",
+      "strengths": [
+        "Strong user research and requirement framing",
+        "Agile scrum methodology leadership"
+      ],
+      "missingSkills": [
+        "Hands-on LLM agent design",
+        "Developer API ecosystem depth"
+      ],
+      "parsedResume": {
+        "fullName": "David Kim",
+        "email": "david.kim@example.com",
+        "phone": "+1 (646) 332-9011",
+        "location": "New York, NY",
+        "summary": "Customer-centric Product Manager with 4+ years scaling SaaS workflow applications.",
+        "skills": [
+          "Product Management",
+          "Roadmapping",
+          "Jira",
+          "Mixpanel",
+          "User Research",
+          "Agile"
+        ],
+        "experienceYears": 4,
+        "experiences": [
+          {
+            "role": "Product Manager",
+            "company": "WorkflowHub",
+            "duration": "2022 - Present",
+            "highlights": [
+              "Increased user activation rate by 22% across enterprise onboardings."
+            ]
+          }
+        ],
+        "education": [
+          {
+            "degree": "B.A. in Economics",
+            "institution": "Columbia University",
+            "year": "2021"
+          }
+        ]
+      },
+      "appliedAt": "2026-03-05T14:10:00.000Z"
+    }
+  ],
+  "interviews": [
+    {
+      "id": "int-1",
+      "candidateId": "cand-1",
+      "candidateName": "Elena Rostova",
+      "candidateEmail": "elena.rostova@example.com",
+      "jobId": "job-1",
+      "jobTitle": "Senior Full-Stack Engineer (MERN & AI)",
+      "scheduledAt": "2026-03-03T16:00:00.000Z",
+      "durationMinutes": 30,
+      "interviewType": "AI Screening",
+      "status": "Completed",
+      "meetingLink": "https://meet.google.com/ais-rec-elena",
+      "interviewerAgentName": "Alex (AI Talent Screener)",
+      "notes": "AI Screening Completed with 92% overall candidate score. Fast-track recommendation."
+    },
+    {
+      "id": "int-2",
+      "candidateId": "cand-2",
+      "candidateName": "Marcus Vance",
+      "candidateEmail": "marcus.vance@example.com",
+      "jobId": "job-1",
+      "jobTitle": "Senior Full-Stack Engineer (MERN & AI)",
+      "scheduledAt": "2026-10-04T11:07:12.231Z",
+      "durationMinutes": 30,
+      "interviewType": "AI Screening",
+      "status": "Scheduled",
+      "meetingLink": "https://meet.google.com/ais-rec-marcus",
+      "interviewerAgentName": "Alex (AI Talent Screener)",
+      "notes": "Candidate confirmed via calendar invite."
+    }
+  ]
+}

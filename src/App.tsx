@@ -8,7 +8,10 @@ import { JobPostings } from "./components/JobPostings";
 import { InterviewScorecardModal } from "./components/InterviewScorecardModal";
 import { CandidatePortal } from "./components/CandidatePortal";
 import type { Candidate, Job, InterviewSlot, PlatformStats, InterviewEvaluation } from "./types";
+import { apiFetch } from "./lib/api";
 import { Bot, Sparkles, CheckCircle2, ShieldAlert } from "lucide-react";
+
+const STORAGE_KEY = "hire-ai-demo-data";
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<TabType>("pipeline");
@@ -18,6 +21,44 @@ export default function App() {
   const [interviews, setInterviews] = useState<InterviewSlot[]>([]);
   const [stats, setStats] = useState<PlatformStats | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const persistLocalData = (nextJobs: Job[], nextCandidates: Candidate[], nextInterviews: InterviewSlot[]) => {
+    if (typeof window === "undefined") return;
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        jobs: nextJobs,
+        candidates: nextCandidates,
+        interviews: nextInterviews,
+      })
+    );
+  };
+
+  const readPersistedData = () => {
+    if (typeof window === "undefined") {
+      return { jobs: [], candidates: [], interviews: [] as InterviewSlot[] };
+    }
+
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return { jobs: [], candidates: [], interviews: [] as InterviewSlot[] };
+
+      const parsed = JSON.parse(raw) as {
+        jobs?: Job[];
+        candidates?: Candidate[];
+        interviews?: InterviewSlot[];
+      };
+
+      return {
+        jobs: parsed.jobs || [],
+        candidates: parsed.candidates || [],
+        interviews: parsed.interviews || [],
+      };
+    } catch {
+      return { jobs: [], candidates: [], interviews: [] as InterviewSlot[] };
+    }
+  };
 
   // Active candidate for Interview Room or Scheduler
   const [activeInterviewCandidate, setActiveInterviewCandidate] = useState<Candidate | null>(null);
@@ -41,33 +82,51 @@ export default function App() {
 
   // Fetch initial data from Express backend
   const fetchData = async () => {
+    const persisted = readPersistedData();
+
     try {
       setIsLoading(true);
       const [jobsRes, candsRes, interviewsRes, statsRes] = await Promise.all([
-        fetch("/api/jobs"),
-        fetch("/api/candidates"),
-        fetch("/api/interviews"),
-        fetch("/api/stats"),
+        apiFetch("/api/jobs"),
+        apiFetch("/api/candidates"),
+        apiFetch("/api/interviews"),
+        apiFetch("/api/stats"),
       ]);
 
       if (jobsRes.ok) {
         const jobsData = await jobsRes.json();
         setJobs(jobsData);
+        persistLocalData(jobsData, candidates, interviews);
+      } else if (persisted.jobs.length) {
+        setJobs(persisted.jobs);
       }
+
       if (candsRes.ok) {
         const candsData = await candsRes.json();
         setCandidates(candsData);
+        persistLocalData(jobs, candsData, interviews);
+      } else if (persisted.candidates.length) {
+        setCandidates(persisted.candidates);
       }
+
       if (interviewsRes.ok) {
         const interviewsData = await interviewsRes.json();
         setInterviews(interviewsData);
+        persistLocalData(jobs, candidates, interviewsData);
+      } else if (persisted.interviews.length) {
+        setInterviews(persisted.interviews);
       }
+
       if (statsRes.ok) {
         const statsData = await statsRes.json();
         setStats(statsData);
       }
     } catch (err) {
       console.error("Error loading platform data:", err);
+      const fallback = readPersistedData();
+      setJobs(fallback.jobs);
+      setCandidates(fallback.candidates);
+      setInterviews(fallback.interviews);
     } finally {
       setIsLoading(false);
     }
@@ -80,7 +139,7 @@ export default function App() {
   // Save new candidate from resume parser
   const handleSaveCandidate = async (newCand: Candidate) => {
     try {
-      const res = await fetch("/api/candidates", {
+      const res = await apiFetch("/api/candidates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newCand),
@@ -88,12 +147,16 @@ export default function App() {
 
       if (res.ok) {
         const saved = await res.json();
-        setCandidates((prev) => [saved, ...prev.filter((c) => c.id !== saved.id)]);
+        const nextCandidates = [saved, ...candidates.filter((c) => c.id !== saved.id)];
+        setCandidates(nextCandidates);
+        persistLocalData(jobs, nextCandidates, interviews);
         showToast(`Candidate ${saved.name} added to pipeline with ${saved.atsScore}% ATS score!`);
         fetchData();
       }
     } catch (e) {
-      setCandidates((prev) => [newCand, ...prev.filter((c) => c.id !== newCand.id)]);
+      const nextCandidates = [newCand, ...candidates.filter((c) => c.id !== newCand.id)];
+      setCandidates(nextCandidates);
+      persistLocalData(jobs, nextCandidates, interviews);
       showToast(`Candidate ${newCand.name} saved!`);
     }
   };
@@ -101,7 +164,7 @@ export default function App() {
   // Update candidate status
   const handleUpdateCandidateStatus = async (candidateId: string, status: Candidate["status"]) => {
     try {
-      const res = await fetch(`/api/candidates/${candidateId}`, {
+      const res = await apiFetch(`/api/candidates/${candidateId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
@@ -109,31 +172,37 @@ export default function App() {
 
       if (res.ok) {
         const updated = await res.json();
-        setCandidates((prev) => prev.map((c) => (c.id === candidateId ? updated : c)));
+        const nextCandidates = candidates.map((c) => (c.id === candidateId ? updated : c));
+        setCandidates(nextCandidates);
+        persistLocalData(jobs, nextCandidates, interviews);
         showToast(`Candidate status set to "${status}".`);
       }
     } catch (e) {
-      setCandidates((prev) =>
-        prev.map((c) => (c.id === candidateId ? { ...c, status } : c))
-      );
+      const nextCandidates = candidates.map((c) => (c.id === candidateId ? { ...c, status } : c));
+      setCandidates(nextCandidates);
+      persistLocalData(jobs, nextCandidates, interviews);
     }
   };
 
   // Delete candidate
   const handleDeleteCandidate = async (candidateId: string) => {
     try {
-      await fetch(`/api/candidates/${candidateId}`, { method: "DELETE" });
-      setCandidates((prev) => prev.filter((c) => c.id !== candidateId));
+      await apiFetch(`/api/candidates/${candidateId}`, { method: "DELETE" });
+      const nextCandidates = candidates.filter((c) => c.id !== candidateId);
+      setCandidates(nextCandidates);
+      persistLocalData(jobs, nextCandidates, interviews);
       showToast("Candidate removed from pipeline.", "info");
     } catch (e) {
-      setCandidates((prev) => prev.filter((c) => c.id !== candidateId));
+      const nextCandidates = candidates.filter((c) => c.id !== candidateId);
+      setCandidates(nextCandidates);
+      persistLocalData(jobs, nextCandidates, interviews);
     }
   };
 
   // Schedule interview
   const handleScheduleInterview = async (newSlot: Omit<InterviewSlot, "id">) => {
     try {
-      const res = await fetch("/api/interviews", {
+      const res = await apiFetch("/api/interviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newSlot),
@@ -141,7 +210,9 @@ export default function App() {
 
       if (res.ok) {
         const created = await res.json();
-        setInterviews((prev) => [created, ...prev]);
+        const nextInterviews = [created, ...interviews];
+        setInterviews(nextInterviews);
+        persistLocalData(jobs, candidates, nextInterviews);
         handleUpdateCandidateStatus(created.candidateId, "Interview Scheduled");
         showToast(`Interview scheduled for ${created.candidateName}! Calendar invite dispatched.`);
       }
@@ -150,50 +221,62 @@ export default function App() {
         id: `slot-${Date.now()}`,
         ...newSlot,
       };
-      setInterviews((prev) => [fallbackSlot, ...prev]);
+      const nextInterviews = [fallbackSlot, ...interviews];
+      setInterviews(nextInterviews);
+      persistLocalData(jobs, candidates, nextInterviews);
     }
   };
 
   // Update interview status
   const handleUpdateInterviewStatus = async (id: string, status: InterviewSlot["status"]) => {
     try {
-      const res = await fetch(`/api/interviews/${id}`, {
+      const res = await apiFetch(`/api/interviews/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
       });
       if (res.ok) {
         const updated = await res.json();
-        setInterviews((prev) => prev.map((i) => (i.id === id ? updated : i)));
+        const nextInterviews = interviews.map((i) => (i.id === id ? updated : i));
+        setInterviews(nextInterviews);
+        persistLocalData(jobs, candidates, nextInterviews);
         showToast(`Interview status set to ${status}`);
       }
     } catch (e) {
-      setInterviews((prev) => prev.map((i) => (i.id === id ? { ...i, status } : i)));
+      const nextInterviews = interviews.map((i) => (i.id === id ? { ...i, status } : i));
+      setInterviews(nextInterviews);
+      persistLocalData(jobs, candidates, nextInterviews);
     }
   };
 
   // Delete interview
   const handleDeleteInterview = async (id: string) => {
     try {
-      await fetch(`/api/interviews/${id}`, { method: "DELETE" });
-      setInterviews((prev) => prev.filter((i) => i.id !== id));
+      await apiFetch(`/api/interviews/${id}`, { method: "DELETE" });
+      const nextInterviews = interviews.filter((i) => i.id !== id);
+      setInterviews(nextInterviews);
+      persistLocalData(jobs, candidates, nextInterviews);
       showToast("Interview session removed from schedule.", "info");
     } catch (e) {
-      setInterviews((prev) => prev.filter((i) => i.id !== id));
+      const nextInterviews = interviews.filter((i) => i.id !== id);
+      setInterviews(nextInterviews);
+      persistLocalData(jobs, candidates, nextInterviews);
     }
   };
 
   // Create new job
   const handleCreateJob = async (newJobData: Omit<Job, "id" | "createdAt" | "applicantCount">) => {
     try {
-      const res = await fetch("/api/jobs", {
+      const res = await apiFetch("/api/jobs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newJobData),
       });
       if (res.ok) {
         const created = await res.json();
-        setJobs((prev) => [created, ...prev]);
+        const nextJobs = [created, ...jobs];
+        setJobs(nextJobs);
+        persistLocalData(nextJobs, candidates, interviews);
         showToast(`New opening "${created.title}" published!`);
       }
     } catch (e) {
@@ -203,18 +286,24 @@ export default function App() {
         applicantCount: 0,
         ...newJobData,
       };
-      setJobs((prev) => [fallbackJob, ...prev]);
+      const nextJobs = [fallbackJob, ...jobs];
+      setJobs(nextJobs);
+      persistLocalData(nextJobs, candidates, interviews);
     }
   };
 
   // Delete job
   const handleDeleteJob = async (jobId: string) => {
     try {
-      await fetch(`/api/jobs/${jobId}`, { method: "DELETE" });
-      setJobs((prev) => prev.filter((j) => j.id !== jobId));
+      await apiFetch(`/api/jobs/${jobId}`, { method: "DELETE" });
+      const nextJobs = jobs.filter((j) => j.id !== jobId);
+      setJobs(nextJobs);
+      persistLocalData(nextJobs, candidates, interviews);
       showToast("Job position closed.", "info");
     } catch (e) {
-      setJobs((prev) => prev.filter((j) => j.id !== jobId));
+      const nextJobs = jobs.filter((j) => j.id !== jobId);
+      setJobs(nextJobs);
+      persistLocalData(nextJobs, candidates, interviews);
     }
   };
 
@@ -227,12 +316,14 @@ export default function App() {
         evaluation,
       };
 
-      setCandidates((prev) =>
-        prev.map((c) => (c.id === activeInterviewCandidate.id ? updatedCandidate : c))
+      const nextCandidates = candidates.map((c) =>
+        c.id === activeInterviewCandidate.id ? updatedCandidate : c
       );
+      setCandidates(nextCandidates);
+      persistLocalData(jobs, nextCandidates, interviews);
 
       // Persist to backend
-      fetch(`/api/candidates/${activeInterviewCandidate.id}`, {
+      apiFetch(`/api/candidates/${activeInterviewCandidate.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
